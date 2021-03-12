@@ -84,3 +84,63 @@ describe("getMostPopularBook", () => {
     });
   });
 });
+
+describe("calculateDiscount", () => {
+  describe("when  book is given with id", () => {
+    beforeEach(() => {
+      booksProvider.getBooks = jest.fn(() => [
+        {
+          _id: 1,
+          price: 100,
+        },
+      ]);
+    });
+
+    it("should return book price with 20% discount", () => {
+      const price = bookService.calculateDiscount(1);
+      expect(price).toBe(80);
+    });
+  });
+
+  describe("when  book with given id not found", () => {
+    beforeEach(() => {
+      booksProvider.getBooks = jest.fn(() => []);
+    });
+
+    it("should throw an Error ", () => {
+      expect(() => bookService.calculateDiscount(1)).toThrow(
+        "Book with such id not found"
+      );
+    });
+  });
+});
+
+describe("calculateDiscountAsync", () => {
+  describe("when  book is given with id", () => {
+    beforeEach(() => {
+      booksProvider.getBooks = jest.fn(() => [
+        {
+          _id: 1,
+          price: 100,
+        },
+      ]);
+    });
+
+    it("should return book price with 20% discount", async () => {
+      const price = await bookService.calculateDiscountAsync(1);
+      expect(price).toBe(80);
+    });
+  });
+
+  describe("when  book with given id not found", () => {
+    beforeEach(() => {
+      booksProvider.getBooks = jest.fn(() => []);
+    });
+
+    it("should throw an Error ", () => {
+      expect(
+        async () => await bookService.calculateDiscountAsync(1)
+      ).rejects.toThrow("Book with such id not found");
+    });
+  });
+});
